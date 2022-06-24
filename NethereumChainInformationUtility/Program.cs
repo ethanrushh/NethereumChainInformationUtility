@@ -101,8 +101,6 @@ namespace ChainInformationUtility
             {
                 var httpResult = await client.PostAsync(url, new StringContent(data));
 
-                //Console.WriteLine(await httpResult.Content.ReadAsStringAsync());
-
                 if (!httpResult.IsSuccessStatusCode)
                     return false;
 
