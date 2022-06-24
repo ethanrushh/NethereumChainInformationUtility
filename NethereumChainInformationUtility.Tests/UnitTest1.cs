@@ -6,7 +6,7 @@ namespace NethereumChainInformationUtility.Tests
         [TestMethod]
         public void TestSuccessfulExitCode()
         {
-            Assert.IsTrue(Task.Run<int>(Task<int> () => ChainInformationUtility.Program.Main(new string[] { })).Result == 0);
+            Assert.IsTrue(Task.Run(Task<int>? () => ChainInformationUtility.Program.Main(Array.Empty<string>())).Result == 0);
         }
     }
 }
