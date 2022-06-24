@@ -74,11 +74,11 @@ namespace ChainInformationUtility
                 {
                     try
                     {
-                        var isValid = ValidateRpcExists(rpc).Result;
+                        var isValid = ValidateRpcExists(rpc, rpcDto.ChainId).Result;
 
                         if (!isValid) return;
 
-                        result.Add(new RpcInfo(rpcDto.ChainId, rpc, ChainHasEip1559Support(rpc).Result));
+                        result.Add(new RpcInfo(rpcDto.ChainId, rpc, ChainHasEip1559Support(rpc, rpcDto.ChainId).Result));
                     }
                     catch { }
                 });
@@ -90,10 +90,10 @@ namespace ChainInformationUtility
         }
 
         // Uses web3_clientVersion - tested to work on all
-        public static async Task<bool> ValidateRpcExists(string url) => await MakeRpcRequest(url, "{\"jsonrpc\":\"2.0\",\"method\":\"web3_clientVersion\",\"params\":[],\"id\":67}");
+        public static async Task<bool> ValidateRpcExists(string url, ulong id) => await MakeRpcRequest(url, $"{{\"jsonrpc\":\"2.0\",\"method\":\"web3_clientVersion\",\"params\":[],\"id\":{id}}}");
 
         // Checks if eth_feeHistory exists
-        public static async Task<bool> ChainHasEip1559Support(string url) => await MakeRpcRequest(url, "{\"jsonrpc\":\"2.0\",\"method\":\"eth_feeHistory\",\"params\":[4, \"latest\", [25, 75]],\"id\":1}");
+        public static async Task<bool> ChainHasEip1559Support(string url, ulong id) => await MakeRpcRequest(url, $"{{\"jsonrpc\":\"2.0\",\"method\":\"eth_feeHistory\",\"params\":[4, \"latest\", [25, 75]],\"id\":{id}}}");
 
         public static async Task<bool> MakeRpcRequest(string url, string data)
         {
