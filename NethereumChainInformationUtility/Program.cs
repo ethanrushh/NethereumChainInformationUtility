@@ -9,14 +9,14 @@ using Newtonsoft.Json;
 
 namespace ChainInformationUtility
 {
-    internal class Program
+    public static class Program
     {
         static HttpClient client = new();
         const string chainListRpc = @"https://raw.githubusercontent.com/DefiLlama/chainlist/844277a44d6c8c9bff5d2e75e7de20ee010317f0/constants/extraRpcs.json";
         static bool disableOutput = false;
         const bool DEBUG_MODE = false;
 
-        static async Task Main(string[] args)
+        public static async Task<int> Main(string[] args)
         {
             disableOutput = !DEBUG_MODE;
             dynamic rpcList = new{};
@@ -34,7 +34,7 @@ namespace ChainInformationUtility
             catch (Exception ex)
             {
                 Output($"FAIL: Failed to get RPC URLs from {chainListRpc}: " + ex);
-                Environment.Exit(-1);
+                return -1;
             }
 
             var result = ScanRpcs(rpcList, 100);
@@ -43,7 +43,7 @@ namespace ChainInformationUtility
 
             Output(JsonConvert.SerializeObject(result, Formatting.Indented), false);
 
-            Environment.Exit(0); // Just to be 100% sure all the threads are gone
+            return 0;
         }
 
         static IEnumerable<RpcInfo> ScanRpcs(dynamic chainRpcList, uint maxThreads)
